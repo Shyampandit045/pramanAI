@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nyaya Pramaan (न्याय प्रमाण) — Indian Court Judgment Quote Verification</title>
+  <!-- Google Fonts: Cinzel & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand" data-nav="dashboard">
+        <div class="brand-emblem">⚖</div>
+        <div>
+          <div class="brand-title">NYAYA PRAMAAN</div>
+          <div class="brand-subtitle">न्याय प्रमाण • Judicial Quote Verification</div>
+        </div>
+      </div>
+
+      <ul class="nav-links">
+        <li><a class="nav-link active" data-nav="dashboard">🏛️ Dashboard</a></li>
+        <li><a class="nav-link" data-nav="verify">⚖️ Verify Quote</a></li>
+        <li><a class="nav-link" data-nav="missing-cases">❓ Missing Cases & Help</a></li>
+        <li><a class="nav-link" data-nav="history">📜 History</a></li>
+        <li><a class="nav-link" data-nav="profile">👤 Profile</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <div id="nav-user-container">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Body -->
+  <main class="main-content">
+
+    <!-- 1. DASHBOARD VIEW -->
+    <div id="view-dashboard" class="view-panel">
+      
+      <!-- Hero Card -->
+      <section class="hero-card">
+        <div class="hero-tag">Official Supreme Court Open Data Dataset (1950–Present)</div>
+        <h1 class="hero-title">Verifying AI Quotations Against <span>Authentic Court Judgments</span></h1>
+        <p class="hero-subtitle">
+          Generative AI tools frequently fabricate, modify, or misattribute paragraphs from real Indian court judgments.
+          Nyaya Pramaan cross-checks cited passages against authentic Supreme Court records, identifying exact matches,
+          altered words, and fabricated quotations with pinpoint page references.
+        </p>
+
+        <div style="display:flex; gap:1rem; margin-bottom:1.5rem; flex-wrap:wrap;">
+          <button class="btn btn-primary" data-nav="verify">⚖️ Start Verification</button>
+          <button class="btn btn-outline" style="color:#fff; border-color:rgba(255,255,255,0.3);" data-nav="missing-cases">📄 Upload Judgment PDF</button>
+          <button class="btn btn-navy" id="btn-quick-demo">🚀 Quick Demo Mode</button>
+        </div>
+
+        <div class="hero-metrics">
+          <div class="metric-item">
+            <div class="metric-value" id="stat-total-judgments">10+</div>
+            <div class="metric-label">Judgments Pre-Indexed</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-value" id="stat-total-verifications">4</div>
+            <div class="metric-label">Total Verifications</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-value" id="stat-exact-matches" style="color:#34D399;">1</div>
+            <div class="metric-label">Exact Verbatim Matches</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-value" id="stat-modified-matches" style="color:#FBBF24;">1</div>
+            <div class="metric-label">Modified Quotes Flagged</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1-Click Verification Presets Section -->
+      <section class="preset-section">
+        <div class="section-header">
+          <h2 class="section-title">⚡ 1-Click Test Scenarios (Instant Evaluation)</h2>
+          <span style="font-size:0.82rem; color:var(--slate-500);">Click any preset to load authentic or modified quotes</span>
+        </div>
+        <div class="preset-grid" id="preset-cards-container">
+          <!-- Populated by app.js -->
+        </div>
+      </section>
+
+      <!-- Recent Verifications Table on Dashboard -->
+      <section class="card">
+        <div class="section-header">
+          <h2 class="section-title">📜 Recent Judicial Quote Verifications</h2>
+          <button class="btn btn-outline btn-sm" data-nav="history">View All History &rarr;</button>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Case & Citation</th>
+                <th>Quotation Excerpt</th>
+                <th>Status</th>
+                <th>Similarity</th>
+                <th>Timestamp</th>
+                <th>Reports</th>
+              </tr>
+            </thead>
+            <tbody id="history-table-body">
+              <!-- Populated by app.js -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- 2. VERIFY QUOTE VIEW -->
+    <div id="view-verify" class="view-panel" style="display:none;">
+      
+      <!-- Verification Card -->
+      <div class="card">
+        <div class="section-header">
+          <h2 class="section-title">⚖️ Court Case & AI Quotation Verification Engine</h2>
+          <span style="font-size:0.82rem; color:var(--slate-500);">Supreme Court Repository • High Court Extensible</span>
+        </div>
+
+        <form id="form-verify-quote">
+          <!-- Case Search -->
+          <div class="form-group case-search-wrapper">
+            <label class="form-label" for="input-case-search">
+              1. Search Court Judgment <span class="required">*</span>
+              <span style="font-weight:400; font-size:0.8rem; color:var(--slate-500); margin-left:6px;">
+                (Type case name like "Romesh Thappar", citation like "1950 SCR 594", or year like "1973")
+              </span>
+            </label>
+            <input type="text" id="input-case-search" class="form-control" placeholder="Search by case title, citation (e.g., 1950 SCR 594), petitioner, respondent..." autocomplete="off">
+            <input type="hidden" id="input-selected-case-id">
+            
+            <div id="case-search-dropdown" class="search-results-dropdown">
+              <!-- Autocomplete items -->
+            </div>
+          </div>
+
+          <!-- Selected Case Banner -->
+          <div id="selected-case-badge" class="banner-notice info" style="display:none; margin-bottom:1.25rem;">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <!-- Quotation Input -->
+          <div class="form-group">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+              <label class="form-label" for="input-quote-text" style="margin-bottom:0;">
+                2. Paste AI-Generated / Counsel Quotation <span class="required">*</span>
+              </label>
+              <span id="quote-counter" style="font-size:0.78rem; color:var(--slate-500);">0 words (0 characters)</span>
+            </div>
+            <textarea id="input-quote-text" class="form-control" placeholder="Paste the exact quoted legal passage you want to verify against the authentic judgment record..."></textarea>
+          </div>
+
+          <!-- Actions -->
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+            <div style="display:flex; gap:0.5rem;">
+              <button type="submit" class="btn btn-primary" id="btn-run-verify">
+                ⚖️ Verify Quotation Now
+              </button>
+              <button type="button" class="btn btn-outline" onclick="resetVerificationForm()">Clear</button>
+            </div>
+            <span style="font-size:0.8rem; color:var(--slate-500);">
+              💡 <em>Exact token alignment, sequence matching, and OCR fallbacks enabled.</em>
+            </span>
+          </div>
+        </form>
+
+        <!-- Loading State Indicator -->
+        <div id="verification-loading-state" style="display:none; margin-top:1.5rem;" class="banner-notice info">
+          <div>
+            <div class="banner-title"><span class="spinner"></span> Performing Multi-Tier Judicial Verification</div>
+            <div class="banner-desc">
+              1. Accessing original judgment record from AWS Open Data repository...<br>
+              2. Inspecting page-level text layers...<br>
+              3. Executing sliding-window sequence alignment and fuzzy difference analysis...
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Verification Results Container -->
+      <div id="verification-result-wrapper">
+        <!-- Result card rendered dynamically here -->
+      </div>
+    </div>
+
+    <!-- 3. MISSING CASES & HELP VIEW -->
+    <div id="view-missing-cases" class="view-panel" style="display:none;">
+      
+      <!-- Prominent Mandatory Notice -->
+      <div class="banner-notice warning">
+        <div style="font-size:1.5rem; line-height:1;">ℹ️</div>
+        <div>
+          <div class="banner-title" style="font-size:1.05rem;">We couldn't find the requested judgment. This does not necessarily mean the quotation is fake.</div>
+          <div class="banner-desc">
+            Judicial archives contain over 75 years of legal proceedings. A quotation might be absent from our local index due to:
+            <ul style="margin: 0.4rem 0 0.4rem 1.25rem;">
+              <li><strong>Citation Variants:</strong> AIR, SCC, SCR, and Neutral Citations often differ in numbering and volume index.</li>
+              <li><strong>Oral vs. Signed Opinions:</strong> Remarks made during hearings and reported by legal media may not appear in the signed judgment.</li>
+              <li><strong>State High Courts:</strong> Judgments from Indian High Courts (Delhi, Bombay, etc.) are slated for future expansion.</li>
+              <li><strong>Document Format / OCR:</strong> Pre-1970 scanned photocopies without digital text layers require custom OCR processing.</li>
+            </ul>
+            <strong>Available actions:</strong> Search alternative citation years, upload an authentic judgment PDF for direct verification, or submit a missing case help ticket.
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs Navigation -->
+      <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchHelpTab('tab-upload-pdf', this)">📄 Upload Judgment PDF</button>
+        <button class="tab-btn" onclick="switchHelpTab('tab-help-form', this)">📝 Submit Help Request</button>
+        <button class="tab-btn" onclick="switchHelpTab('tab-faqs', this)">❓ FAQs & Troubleshooting</button>
+      </div>
+
+      <!-- Tab 1: Upload Judgment PDF -->
+      <div id="tab-upload-pdf" class="help-tab-content">
+        <div class="card">
+          <div class="section-header">
+            <h2 class="section-title">📄 Verify Quotation Against Your Uploaded Judgment PDF</h2>
+            <span style="font-size:0.82rem; color:var(--slate-500);">Max 25MB • Scanned & Digital PDFs Supported</span>
+          </div>
+
+          <form id="form-upload-verify">
+            <div class="form-group">
+              <label class="form-label">Upload PDF Document <span class="required">*</span></label>
+              <div class="dropzone" id="pdf-dropzone">
+                <div class="dropzone-icon">📥</div>
+                <div class="dropzone-title">Click to upload or drag & drop court judgment PDF here</div>
+                <div class="dropzone-desc">Supports authentic orders, petitions, and law reports (.pdf format)</div>
+                <input type="file" id="file-pdf-upload" accept="application/pdf" style="display:none;">
+              </div>
+              <div id="uploaded-filename-badge" class="banner-notice info" style="display:none; margin-top:0.75rem;"></div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="upload-case-title">Case Title / Reference Note (Optional)</label>
+              <input type="text" id="upload-case-title" class="form-control" placeholder="e.g. State of Punjab v. Rehabilitation Commissioner">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="upload-quote-text">Quotation to Verify Against Uploaded PDF <span class="required">*</span></label>
+              <textarea id="upload-quote-text" class="form-control" placeholder="Paste the quotation you want to search inside the uploaded PDF document..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="btn-run-upload-verify">
+              Verify Against Uploaded PDF
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Tab 2: Help & Support Form -->
+      <div id="tab-help-form" class="help-tab-content" style="display:none;">
+        <div class="card">
+          <div class="section-header">
+            <h2 class="section-title">📝 Missing Judgment & Citation Inquiry Form</h2>
+            <span style="font-size:0.82rem; color:var(--slate-500);">Saved to Database with Audit Ticket</span>
+          </div>
+
+          <div id="support-confirmation-box" style="display:none;"></div>
+
+          <form id="form-support-ticket">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+              <div class="form-group">
+                <label class="form-label" for="ticket-case-name">Case Name / Parties <span class="required">*</span></label>
+                <input type="text" id="ticket-case-name" class="form-control" placeholder="e.g., Union of India v. Tulsiram Patel" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="ticket-citation">Reported Citation (if known)</label>
+                <input type="text" id="ticket-citation" class="form-control" placeholder="e.g., (1985) 3 SCC 398">
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+              <div class="form-group">
+                <label class="form-label" for="ticket-court">Court Jurisdiction</label>
+                <select id="ticket-court" class="form-control">
+                  <option value="Supreme Court of India">Supreme Court of India</option>
+                  <option value="Delhi High Court">Delhi High Court</option>
+                  <option value="Bombay High Court">Bombay High Court</option>
+                  <option value="Calcutta High Court">Calcutta High Court</option>
+                  <option value="Madras High Court">Madras High Court</option>
+                  <option value="Other High Court / Tribunal">Other High Court / Tribunal</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="ticket-category">Issue Category <span class="required">*</span></label>
+                <select id="ticket-category" class="form-control" required>
+                  <option value="Missing Judgment in Repository">Missing Judgment in Repository</option>
+                  <option value="Incorrect Citation Mapping">Incorrect Citation Mapping</option>
+                  <option value="Scanned Document / OCR Failure">Scanned Document / OCR Failure</option>
+                  <option value="Regional Language Judgment Request">Regional Language Judgment Request</option>
+                  <option value="Other Technical Issue">Other Technical Issue</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="ticket-desc">Detailed Description of Issue <span class="required">*</span></label>
+              <textarea id="ticket-desc" class="form-control" placeholder="Describe the missing judgment, quotation context, or error encountered..." required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="ticket-email">Contact Email (for ticket updates)</label>
+              <input type="email" id="ticket-email" class="form-control" placeholder="advocate@barcouncil.org">
+            </div>
+
+            <button type="submit" class="btn btn-navy" id="btn-submit-ticket">Submit Inquiry & Generate Ticket</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Tab 3: FAQs & Troubleshooting -->
+      <div id="tab-faqs" class="help-tab-content" style="display:none;">
+        <div class="card">
+          <h2 class="section-title" style="margin-bottom:1.25rem;">❓ Frequently Asked Questions & Troubleshooting</h2>
+          
+          <div style="display:flex; flex-direction:column; gap:1rem;">
+            <div class="passage-card">
+              <div class="passage-title">Why does a genuine quotation return "Quote Not Found"?</div>
+              <div class="passage-text">
+                "Quote Not Found" indicates the quotation does not appear in the specific signed judgment record verified.
+                <strong>This does not mean the quotation is fabricated.</strong> It may derive from oral remarks from the bench,
+                separate concurring/dissenting opinions published in alternative reporters, or interim procedural orders.
+              </div>
+            </div>
+
+            <div class="passage-card">
+              <div class="passage-title">How does the engine distinguish Exact Match from Modified Quote?</div>
+              <div class="passage-text">
+                <strong>Exact Match</strong> requires 100% verbatim textual and sequence alignment.
+                <strong>Modified Quote</strong> identifies passages where AI models have altered vocabulary, omitted clauses,
+                or introduced minor hallucinations while preserving some original words.
+              </div>
+            </div>
+
+            <div class="passage-card">
+              <div class="passage-title">What causes an "Inconclusive" result?</div>
+              <div class="passage-text">
+                Inconclusive occurs when the document contains scanned photocopies without an accessible digital text layer,
+                or when OCR quality is too degraded to ensure judicial accuracy.
+              </div>
+            </div>
+
+            <div class="passage-card">
+              <div class="passage-title">What data sources and licenses power Nyaya Pramaan?</div>
+              <div class="passage-text">
+                Powered by the official AWS Open Data Registry Indian Supreme Court Judgments (1950–Present),
+                licensed under Creative Commons Attribution 4.0 (CC BY 4.0).
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 4. VERIFICATION HISTORY VIEW -->
+    <div id="view-history" class="view-panel" style="display:none;">
+      <div class="card">
+        <div class="section-header">
+          <h2 class="section-title">📜 User Verification Audit History</h2>
+          <span style="font-size:0.82rem; color:var(--slate-500);">Per-User Secure Storage • Exportable Reports</span>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Case & Citation</th>
+                <th>Quotation Snippet</th>
+                <th>Status</th>
+                <th>Similarity</th>
+                <th>Verified At</th>
+                <th>Downloads</th>
+              </tr>
+            </thead>
+            <tbody id="history-full-table-body">
+              <!-- Reuses history table rendering -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. USER PROFILE VIEW -->
+    <div id="view-profile" class="view-panel" style="display:none;">
+      <div class="card" style="max-width:700px; margin:0 auto;">
+        <h2 class="section-title" style="margin-bottom:1.5rem;">👤 Legal Practitioner Account Profile</h2>
+        
+        <div style="display:flex; align-items:center; gap:1.25rem; margin-bottom:1.5rem; padding-bottom:1.5rem; border-bottom:1px solid var(--slate-200);">
+          <div class="brand-emblem" style="width:60px; height:60px; font-size:1.75rem;">⚖</div>
+          <div>
+            <h3 id="profile-name" style="font-size:1.2rem; color:var(--navy-900);">Adv. Priya Sharma</h3>
+            <div id="profile-role" style="font-size:0.85rem; color:var(--gold-500); font-weight:600;">Senior Advocate, Supreme Court Bar Association</div>
+            <div id="profile-email" style="font-size:0.82rem; color:var(--slate-500);">demo@nyayapramaan.gov.in</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:1.5rem;">
+          <h4 style="font-size:0.95rem; margin-bottom:0.75rem; color:var(--navy-900);">Account Permissions & Security</h4>
+          <div class="banner-notice info">
+            <div>
+              <div class="banner-title">Security & Session State</div>
+              <div class="banner-desc">
+                • Password securely hashed via PBKDF2-HMAC-SHA256 (100,000 iterations)<br>
+                • Verification audit trail stored under unique user ID<br>
+                • Access to official Supreme Court dataset (CC BY 4.0) enabled
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:0.75rem;">
+          <button class="btn btn-outline" onclick="openAuthModal()">Switch Account</button>
+          <button class="btn btn-navy" onclick="handleLogout()">Sign Out</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Auth Modal (Sign In / Register / Demo) -->
+  <div id="auth-modal" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-title">Nyaya Pramaan Legal Access</div>
+        <button class="modal-close" id="modal-close-btn">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="tabs-nav" style="margin-bottom:1rem;">
+          <button class="tab-btn auth-tab-btn active" data-tab="auth-login-pane">Sign In</button>
+          <button class="tab-btn auth-tab-btn" data-tab="auth-register-pane">Register</button>
+          <button class="tab-btn auth-tab-btn" data-tab="auth-forgot-pane">Reset</button>
+        </div>
+
+        <!-- Login Pane -->
+        <div id="auth-login-pane" class="auth-tab-pane">
+          <form id="form-login">
+            <div class="form-group">
+              <label class="form-label" for="login-email">Email Address</label>
+              <input type="email" id="login-email" class="form-control" placeholder="advocate@barcouncil.org" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="login-password">Password</label>
+              <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn btn-navy" style="width:100%; margin-bottom:0.75rem;">Sign In</button>
+            <button type="button" class="btn btn-primary" onclick="handleDemoLogin()" style="width:100%;">
+              🚀 Instant Demo Access (Senior Advocate)
+            </button>
+          </form>
+        </div>
+
+        <!-- Register Pane -->
+        <div id="auth-register-pane" class="auth-tab-pane" style="display:none;">
+          <form id="form-register">
+            <div class="form-group">
+              <label class="form-label" for="reg-name">Full Name</label>
+              <input type="text" id="reg-name" class="form-control" placeholder="Adv. Rajesh Kumar" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-email">Official Email</label>
+              <input type="email" id="reg-email" class="form-control" placeholder="advocate@delhibar.org" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-password">Password (min 6 characters)</label>
+              <input type="password" id="reg-password" class="form-control" placeholder="••••••••" minlength="6" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-role">Designation / Role</label>
+              <input type="text" id="reg-role" class="form-control" value="Legal Advocate">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%;">Create Account</button>
+          </form>
+        </div>
+
+        <!-- Forgot Password Pane -->
+        <div id="auth-forgot-pane" class="auth-tab-pane" style="display:none;">
+          <form id="form-forgot">
+            <div class="form-group">
+              <label class="form-label" for="forgot-email">Account Email</label>
+              <input type="email" id="forgot-email" class="form-control" placeholder="Enter your registered email" required>
+            </div>
+            <div id="forgot-info-box" class="banner-notice info" style="display:none; margin-bottom:1rem;"></div>
+            <button type="submit" class="btn btn-navy" style="width:100%;">Request Password Reset</button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div>
+        <div class="footer-brand">NYAYA PRAMAAN (न्याय प्रमाण)</div>
+        <p style="margin-bottom:0.75rem; color:var(--slate-400);">
+          Complete AI-Powered Court Judgment Quote Verification Web Application.
+          Ensuring fidelity in legal citations and defending judicial proceedings against AI hallucinations.
+        </p>
+        <p style="font-size:0.78rem; color:var(--slate-500);">
+          Data sourced from the <strong>Indian Supreme Court Judgments Dataset</strong> on AWS Open Data Registry,
+          licensed under <strong>Creative Commons Attribution 4.0 (CC BY 4.0)</strong>.
+        </p>
+      </div>
+
+      <div>
+        <h4 style="color:var(--white); margin-bottom:0.75rem;">Navigation</h4>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:0.4rem;">
+          <li><a href="#" onclick="showView('dashboard'); return false;" style="color:var(--slate-400); text-decoration:none;">Dashboard</a></li>
+          <li><a href="#" onclick="showView('verify'); return false;" style="color:var(--slate-400); text-decoration:none;">Verify Quote</a></li>
+          <li><a href="#" onclick="showView('missing-cases'); return false;" style="color:var(--slate-400); text-decoration:none;">Missing Cases & Help</a></li>
+          <li><a href="#" onclick="showView('history'); return false;" style="color:var(--slate-400); text-decoration:none;">Verification History</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 style="color:var(--white); margin-bottom:0.75rem;">Standards & Ethics</h4>
+        <p style="font-size:0.8rem; line-height:1.45; color:var(--slate-400);">
+          Strict Rule: A quotation not found in a verified record is labeled as <em>Quote Not Found</em>,
+          never as fabricated solely because it was not located.
+        </p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>© 2026 Nyaya Pramaan • Legal-Tech Judicial Integrity System</div>
+      <div>Designed for Indian Legal Practice • Supreme Court of India</div>
+    </div>
+  </footer>
+
+  <script src="/static/js/app.js"></script>
+  <script>
+    // Tab switching for Help & Support
+    function switchHelpTab(tabId, btn) {
+      document.querySelectorAll(".help-tab-content").forEach(el => el.style.display = "none");
+      document.querySelectorAll(".tab-btn").forEach(el => el.classList.remove("active"));
+      const target = document.getElementById(tabId);
+      if (target) target.style.display = "block";
+      if (btn) btn.classList.add("active");
+    }
+
+    // Mirror history table in history view
+    const observer = new MutationObserver(() => {
+      const src = document.getElementById("history-table-body");
+      const dst = document.getElementById("history-full-table-body");
+      if (src && dst) dst.innerHTML = src.innerHTML;
+    });
+    const srcEl = document.getElementById("history-table-body");
+    if (srcEl) observer.observe(srcEl, { childList: true, subtree: true });
+  </script>
+</body>
+</html>
